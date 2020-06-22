@@ -12,7 +12,8 @@ Recentemente ho utilizzato il display LCD e il modulo da quattro relè nel
 progetto [Un primo maggio 2020 a base di Raspberry Pi, Bot Telegram, Display LCD e Relè](https://bit.ly/UnPrimoMaggio2020ABaseDiRaspberryPiBotTelegramDisplayLCDRele)
 che vi invito a leggere.
 
-Quelli che vedete nella figura a seguire sono i componenti utilizzati.
+Quelli che vedete nella figura a seguire sono i componenti utilizzati (a meno della tastiera).
+
 ![Componenti del progetto](./docs/images/pezzi_di_ferro_progetto.jpeg)
 
 L’idea alla base della “ricetta” è quella di realizzare un sistema di sicurezza 
@@ -26,23 +27,26 @@ quello che si può realizzare con un Raspberry Pi, un lettore di Smart Card, un 
 un modulo da quattro relè, un display LCD 16x2 e la propria TS-CNS (Tessera Sanitaria - 
 Carta Nazionale dei Servizi).
 
+
+
 [![Un sistema di accesso basato sulla Smart Card TS-CNS e Raspberry Pi](https://img.youtube.com/vi/_lOdD6tjSDo/0.jpg)](https://www.youtube.com/watch?v=_lOdD6tjSDo)
 
 ## 1. Schema elettrico della soluzione
-Dando per scontato che abbiate tutto il materiale hardware a vostra disposizione, possiamo disporre 
-tutti collegamenti tra i vari componenti hardware che compongono la soluzione, così come indicato 
-dallo schema elettrico mostrato a seguire.
+Dando per scontato che abbiate tutto il materiale hardware a vostra disposizione (vedi capitolo 2. Requisiti), possiamo 
+disporre tutti collegamenti tra i vari componenti hardware che compongono la soluzione, così come indicato dallo schema 
+elettrico mostrato a seguire.
 
 Al fine di facilitare i collegamenti ho indicato nelle note quali sono i pin (BCM) che ogni componente 
 utilizzerà. Per quanto riguarda il layout del connettore J8 del Raspberry PI, fate riferimento alla 
 documentazione ufficiale su [GPIO (general-purpose input/output)](https://www.raspberrypi.org/documentation/usage/gpio/).
 
+
+
 ![Schema elettrico della soluzione](./docs/images/fritzing_schema_soluzione.png)
 
 ## 2. Requisiti
-Per raggiungere questo nostro obiettivo abbiamo bisogno di raccogliere un pochino di 
-materiale, dobbiamo fare una sorta di lista della spesa, sia in termini hardware, 
-sia in termini software. Partiamo dal basso, con la lista dell’hardware.
+Per raggiungere l'obiettivo abbiamo bisogno di raccogliere un pochino di materiale, dobbiamo fare una sorta di lista 
+della spesa, sia in termini hardware, sia in termini software. Partiamo dal basso, con la lista dell’hardware.
 
 1. [**Raspberry Pi**](https://amzn.to/2KX1ybU): ho utilizzato la versione 3 Model B+ 
 che sarà il riferimento di questo articolo. Per coloro che hanno a disposizione 
@@ -58,13 +62,11 @@ con lettere e caratteri "speciali" per un motivo che vedremo dopo.
 5. [**Breadboard**](https://amzn.to/2SsrX5t), [**GPIO Extender**](https://amzn.to/3fd8eRa), [**Cavi Maschio a Femmina Dupont**](https://amzn.to/3bYFo5b) e [**Cavi Maschio a Maschio Dupont**](https://amzn.to/3drg1c7) utilizzati per 
 realizzare i collegamenti tra il Raspberry Pi, il modulo LCD, il modulo Relè e il Key Pad.
 
-Tutti i componenti hardware possono essere acquisitati separatamente, però, se l’argomento 
-vi appassiona, consiglio l’acquisito dello Starter Kit Freenove RFID per Raspberry Pi. 
-All’interno del kit sono inclusi gli ultimi elementi della nostra lista, oltre ad altri 
-numerosi componenti. La figura a seguire mostra ogni componente hardware indicato dalla 
-nostra lista.
+Tutti i componenti hardware possono essere acquisitati separatamente, però, se l’argomento vi appassiona, consiglio 
+l’acquisito dello Starter Kit Freenove RFID per Raspberry Pi. All’interno del kit sono inclusi gli ultimi elementi 
+della nostra lista, oltre ad altri numerosi componenti.
 
-Per quanto riguarda il software abbiamo bisogno di.
+Per quanto riguarda il software abbiamo bisogno di:
 
 1. [**Raspbian OS**](https://www.raspberrypi.org/downloads/raspbian/): a meno di applicazioni 
 particolari, questo sistema operativo basato su Debian è ottimizzato per la piattaforma Raspberry Pi. 
@@ -153,8 +155,8 @@ com'è strutturato il progetto software.
 Il progetto è così organizzato.
 
 1. **modules**: questa directory contiene i moduli Python per l'utilizzo del display LCD 16x2
-    a. PCF8574.py: modulo per la gestione del bus i2c
-    b. Adafruit_LCD1602.py: funzioni ad alto livello per le operazioni sul display LCD
+        a. PCF8574.py: modulo per la gestione del bus i2c
+        b. Adafruit_LCD1602.py: funzioni ad alto livello per le operazioni sul display LCD
 2. **scripts**: questa directory contiene lo script Python **parse-gov-certs.py** il cui scopo 
 è il download dei certificati Governativi Italiani, e lo script bash **auto-update-gov-certificates.sh**
 il cui scopo è aggiungere sul sistema i certificati Governativi Italiani
@@ -162,11 +164,11 @@ il cui scopo è aggiungere sul sistema i certificati Governativi Italiani
 4. **verify_ts_cns_pin.py**: script Python per la verifica del codice PIN sulla TS-CNS
 5. **activate_relay_via_pin_code.py**: script Python che permette l'attiviazione dei relè inserendo
 il codice PIN (1234), senza quindi interazione con la TS-CNS.
-6. **activate_relay_via_ts_cns_pin.py**: script Python che permette l'attivazione deu relè inserendo
+6. **activate_relay_via_ts_cns_pin.py**: script Python che permette l'attivazione dei relè inserendo
 il codice PIN della TS-CNS.
 
 Gli script **verify_ts_cns_pin.py** e **activate_relay_via_ts_cns_pin.py** sono quelli che
-interaggiscono il lettore di Smart Card e la TS-CNS. Il resto degli script sono per fare il test sulla
+interagiscono con il lettore di Smart Card e la TS-CNS. Il resto degli script sono per fare il test sulla
 corretta funzionalità del Key Pad e Relè, e accertarsi quindi che i collegamenti tra i vari
 componenti stiano funzionando correttamente.
  
@@ -175,7 +177,7 @@ Supponendo che abbiate montato tutto secondo lo schema elettrico indicato e che 
 sia connesso alla rete, possiamo procedere con i seguenti step.
 
 1. Accesso al Raspberry Pi via SSH o direttamente dal console. Consiglio di accedere con utenza 
-diversa da root;
+diversa da root
 2. Clonazione del repository amusarra/raspberry-pi-access-via-ts-cns
 3. Aggiornamento dei certificati di sistema
 4. Esecuzione del test

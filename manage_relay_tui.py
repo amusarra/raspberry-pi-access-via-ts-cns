@@ -470,7 +470,7 @@ root_container = FloatContainer(
     floats=[
         # Top float.
         Float(
-            Window(width=120, height=1, align=WindowAlign.RIGHT,
+            Window(width=132, height=1, align=WindowAlign.RIGHT,
                    content=FormattedTextControl(text="[Tab or Shift+Tab to move the focus] [CTRL+Q Exit]"),
                    style="class:top-header"
                    ),
@@ -478,7 +478,7 @@ root_container = FloatContainer(
         ),
         # Bottom float.
         Float(
-            Window(width=120, height=1, align=WindowAlign.CENTER,
+            Window(width=132, height=1, align=WindowAlign.CENTER,
                    content=FormattedTextControl(
                        text="Antonio Musarra's Blog 2009 - 2020 (c) - https://www.dontesta.it | "
                             "https://github.com/amusarra"), style="class:bottom-header"
@@ -495,7 +495,7 @@ root_container = FloatContainer(
                                      button_relay_4, button_relay_scheduling, button_relay_view_scheduled_jobs,
                                      button_relay_scheduling_shutdown, button_relay_status, button_info, button_exit],
                                     padding=1, width=40),
-                        padding=0,
+                        padding=6,
                         style="class:left-pane",
                     ),
                     Box(body=Frame(text_area), padding=0, style="class:right-pane", width=80),

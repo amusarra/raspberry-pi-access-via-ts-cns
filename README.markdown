@@ -18,6 +18,7 @@ mio blog e che invito a leggere, è il riferimento per questo progetto.
 Quelli che vedete nella figura a seguire sono i componenti utilizzati (a meno della tastiera).
 
 ![Componenti del progetto](./docs/images/pezzi_di_ferro_progetto.jpeg)
+
 Figura 1 - Componenti del progetto
 
 L’idea alla base della “ricetta” è quella di realizzare un sistema di sicurezza 
@@ -47,6 +48,7 @@ documentazione ufficiale su [GPIO (general-purpose input/output)](https://www.ra
 
 
 ![Schema elettrico della soluzione](./docs/images/fritzing_schema_soluzione.png)
+
 Figura 2 - Schema elettrico della soluzione
 
 
@@ -202,6 +204,7 @@ La figura a seguire mostra l'output che dovreste ottenere eseguendo lo script ch
 certificati Governativi Italiani al sistema.
 
 ![Aggiunta dei Certificati Governativi al sistema](./docs/images/auto_update_gov_certificate.png)
+
 Figura 3 - Aggiunta dei certificati governativi al sistema
 
 
@@ -256,28 +259,34 @@ Una volta installate tutte le dipendenze, è possibile eseguire lo script, utili
 ``./manage_relay_tui.py`` e dovreste visualizzare quando mostrato dalla figuara a seguire.
 
 ![Manage Relay Home Screen](./docs/images/manage_relay_tui_screen_home.png)
+
 Figura 5 - Home Screen dello script Python manage_relay_tui.py
 
 Le figure a seguire mostrano le schermate dell'applicazione che rappresentano le funzionalità indicate
 in precedenza.
 
 ![Manage Relay Activate Relay](./docs/images/manage_relay_tui_screen_activate_relay.png)
+
 Figura 6 - Attivazione Relay 1
 
 
 ![Manage Relay Status](./docs/images/manage_relay_tui_screen_relay_status.png)
+
 Figura 7 - Visualizzazione dello stato dei relè
 
 
 ![Manage Relay Schedule](./docs/images/manage_relay_tui_screen_schedule_relay.png)
+
 Figura 8 - Schedulazione job per attivazione/disattivazione relè
 
 
 ![Manage Relay View Scheduled Jobs](./docs/images/manage_relay_tui_screen_view_scheduled_jobs.png)
+
 Figura 9 - Visualizzazione dei Job attivi
 
 
 ![Manage Relay View Log Jobs](./docs/images/manage_relay_tui_screen_log_jobs.png)
+
 Figura 10 - Visualizzazione attività dei Job programmati
 
 Lo script scrive alcune informazioni utili sul file di log `manage_relay_tui.log` che sono mostrate a 
@@ -312,3 +321,7 @@ seguire.
 2020-09-13 13:54:12,125 :: INFO :: _real_add_job :: 881 :: Added job "job_relay_3" to job store "default"
 2020-09-13 13:55:00,003 :: INFO :: run_job :: 123 :: Running job "job_relay_1 (trigger: cron[month='*', day='*', day_of_week='*', hour='*', minute='*/1'], next run at: 2020-09-13 13:56:00 UTC)" (scheduled at 2020-09-13 13:55:00+00:00)
 ```
+
+Sul mio canale YouTube ho pubblicato il video tutorial [Gestire un modulo relè collegato al Raspberry Pi con Python tramite una Text-based User Interface](https://youtu.be/GQvPyOEMy9c)
+che descrive nel dettaglio le funzionalità implementate dallo script Python. 
+[![Gestire un modulo relè collegato al Raspberry Pi con Python tramite una Text-based User Interface](https://img.youtube.com/vi/GQvPyOEMy9c/0.jpg)](https://www.youtube.com/watch?v=GQvPyOEMy9c)

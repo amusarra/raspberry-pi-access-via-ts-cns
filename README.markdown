@@ -12,9 +12,13 @@ Recentemente ho utilizzato il display LCD e il modulo da quattro relè nel
 progetto [Un primo maggio 2020 a base di Raspberry Pi, Bot Telegram, Display LCD e Relè](https://bit.ly/UnPrimoMaggio2020ABaseDiRaspberryPiBotTelegramDisplayLCDRele)
 che vi invito a leggere.
 
+L'articolo [Raspberry Pi – Un esempio di applicazione della TS-CNS](https://bit.ly/3hkJ8Aj) pubblicato sul
+mio blog e che invito a leggere, è il riferimento per questo progetto.
+
 Quelli che vedete nella figura a seguire sono i componenti utilizzati (a meno della tastiera).
 
 ![Componenti del progetto](./docs/images/pezzi_di_ferro_progetto.jpeg)
+Figura 1 - Componenti del progetto
 
 L’idea alla base della “ricetta” è quella di realizzare un sistema di sicurezza 
 tale per cui è possibile attivare una serie di relè solo dopo che l'utilizzare del sistema
@@ -43,6 +47,8 @@ documentazione ufficiale su [GPIO (general-purpose input/output)](https://www.ra
 
 
 ![Schema elettrico della soluzione](./docs/images/fritzing_schema_soluzione.png)
+Figura 2 - Schema elettrico della soluzione
+
 
 ## 2. Requisiti
 Per raggiungere l'obiettivo abbiamo bisogno di raccogliere un pochino di materiale, dobbiamo fare una sorta di lista 
@@ -171,7 +177,7 @@ Gli script **verify_ts_cns_pin.py** e **activate_relay_via_ts_cns_pin.py** sono 
 interagiscono con il lettore di Smart Card e la TS-CNS. Il resto degli script sono per fare il test sulla
 corretta funzionalità del Key Pad e Relè, e accertarsi quindi che i collegamenti tra i vari
 componenti stiano funzionando correttamente.
- 
+
 # 4. Quick start
 Supponendo che abbiate montato tutto secondo lo schema elettrico indicato e che il vostro Raspberry Pi 
 sia connesso alla rete, possiamo procedere con i seguenti step.
@@ -196,6 +202,7 @@ La figura a seguire mostra l'output che dovreste ottenere eseguendo lo script ch
 certificati Governativi Italiani al sistema.
 
 ![Aggiunta dei Certificati Governativi al sistema](./docs/images/auto_update_gov_certificate.png)
+Figura 3 - Aggiunta dei certificati governativi al sistema
 
 
 L'aggiunta dei certificati Governativi Italiani al sistema è importante ai fini della validazione
@@ -204,8 +211,104 @@ il processo di autenticazione non andrà mai a buon fine, anche nel caso in cui 
 fosse corretto.
 
 ![Errore di validazione certificato digitale](./docs/images/errore_validazione_certificato_1.png)
+Figura 4 - Errore di validazione del certificato digitale
+
 
 A questo punto è tutto pronto per iniziare i test di funzionamento della soluzione. Consiglio di
 procedere con l'esecuzione degli script Python, con lo stesso ordine mostrato nel capitolo
 _3. Organizzazione del progetto_. Per eseguire gli script sarà sufficiente utilizzare la sintassi
 `./nome_script_python.py`.
+
+# 5. Script bonus
+All'interno del progetto c'è lo script Python ``manage_relay_tui.py``. Ho realizzato questo script
+per rispondere ad alcune domande poste dai lettori del mio blog.
+
+Questo script Python, grazie ad una Text-based User Interface, consente di:
+
+1. attivare e disattivare i quattro relè del modulo utilizzato in questo progetto. Fare rifermento
+allo schema elettrico della soluzione;
+2. verificare lo stato di ogni relè (in questo caso sono quattro);
+3. impostare una programmazione di attivazione e disattivazione per ogni relè del modulo;
+4. modificare le programmazioni di attivazione e disattivazione esistenti;
+5. verificare le programmazioni impostate;
+6. eseguire lo stop di tutte le programmazioni.
+
+Per poter eseguire questo script è necessario installare i seguenti pacchetti Python:
+
+1. [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) >= 3.0
+2. [Advanced Python Scheduler](https://apscheduler.readthedocs.io/en/stable/index.html) >= 3.6.3
+3. [Python PID](https://pypi.org/project/pid/) >= 3
+4. [Emoji for Python](https://pypi.org/project/emoji/) >= 0.6.0
+
+L'installazione dei pacchetti Python avviene sempre utilizzando il comando ``pip`` così' come indicato
+sulla documentazione di ogni pacchetto. A seguire sono mostrati i comandi per l'installazione dei
+pacchetti richiesti dallo script.
+
+
+```bash
+$ sudo pip install prompt_toolkit
+$ sudo pip install apscheduler
+$ sudo pip install pid
+$ sudo pip install emoji --upgrade
+```
+
+Una volta installate tutte le dipendenze, è possibile eseguire lo script, utilizzando il comando
+``./manage_relay_tui.py`` e dovreste visualizzare quando mostrato dalla figuara a seguire.
+
+![Manage Relay Home Screen](./docs/images/manage_relay_tui_screen_home.png)
+Figura 5 - Home Screen dello script Python manage_relay_tui.py
+
+Le figure a seguire mostrano le schermate dell'applicazione che rappresentano le funzionalità indicate
+in precedenza.
+
+![Manage Relay Activate Relay](./docs/images/manage_relay_tui_screen_activate_relay.png)
+Figura 6 - Attivazione Relay 1
+
+
+![Manage Relay Status](./docs/images/manage_relay_tui_screen_relay_status.png)
+Figura 7 - Visualizzazione dello stato dei relè
+
+
+![Manage Relay Schedule](./docs/images/manage_relay_tui_screen_schedule_relay.png)
+Figura 8 - Schedulazione job per attivazione/disattivazione relè
+
+
+![Manage Relay View Scheduled Jobs](./docs/images/manage_relay_tui_screen_view_scheduled_jobs.png)
+Figura 9 - Visualizzazione dei Job attivi
+
+
+![Manage Relay View Log Jobs](./docs/images/manage_relay_tui_screen_log_jobs.png)
+Figura 10 - Visualizzazione attività dei Job programmati
+
+Lo script scrive alcune informazioni utili sul file di log `manage_relay_tui.log` che sono mostrate a 
+seguire.
+
+```bash
+2020-09-13 13:46:41,520 :: DEBUG :: check :: 181 :: <pid.posix.PidFile object at 0xffff80890940> check pidfile: /run/user/1001/manage_relay_tui.py.pid
+2020-09-13 13:46:41,521 :: DEBUG :: __init__ :: 59 :: Using selector: EpollSelector
+2020-09-13 13:53:36,016 :: INFO :: scheduler_add_job :: 323 :: Schedule Settings: 4;*/1 * * * *
+2020-09-13 13:53:36,017 :: INFO :: scheduler_add_job :: 331 :: Relay Id: 4
+2020-09-13 13:53:36,017 :: INFO :: scheduler_add_job :: 332 :: Cron Expression: */1 * * * * for Relay Id: 4
+2020-09-13 13:53:36,018 :: INFO :: add_job :: 440 :: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2020-09-13 13:53:36,018 :: INFO :: scheduler_add_job :: 346 :: Starting Scheduler...
+2020-09-13 13:53:36,023 :: INFO :: _real_add_job :: 881 :: Added job "job_relay_4" to job store "default"
+2020-09-13 13:53:36,023 :: INFO :: start :: 166 :: Scheduler started
+2020-09-13 13:53:36,024 :: INFO :: scheduler_add_job :: 349 :: Scheduler Started
+2020-09-13 13:53:50,142 :: INFO :: scheduler_add_job :: 323 :: Schedule Settings: 1;*/1 * * * *
+2020-09-13 13:53:50,142 :: INFO :: scheduler_add_job :: 331 :: Relay Id: 1
+2020-09-13 13:53:50,143 :: INFO :: scheduler_add_job :: 332 :: Cron Expression: */1 * * * * for Relay Id: 1
+2020-09-13 13:53:50,145 :: INFO :: _real_add_job :: 881 :: Added job "job_relay_1" to job store "default"
+2020-09-13 13:54:00,002 :: INFO :: run_job :: 123 :: Running job "job_relay_1 (trigger: cron[month='*', day='*', day_of_week='*', hour='*', minute='*/1'], next run at: 2020-09-13 13:54:00 UTC)" (scheduled at 2020-09-13 13:54:00+00:00)
+2020-09-13 13:54:00,005 :: INFO :: run_job :: 123 :: Running job "job_relay_4 (trigger: cron[month='*', day='*', day_of_week='*', hour='*', minute='*/1'], next run at: 2020-09-13 13:54:00 UTC)" (scheduled at 2020-09-13 13:54:00+00:00)
+2020-09-13 13:54:00,005 :: INFO :: run_job :: 144 :: Job "job_relay_1 (trigger: cron[month='*', day='*', day_of_week='*', hour='*', minute='*/1'], next run at: 2020-09-13 13:55:00 UTC)" executed successfully
+2020-09-13 13:54:00,007 :: INFO :: run_job :: 144 :: Job "job_relay_4 (trigger: cron[month='*', day='*', day_of_week='*', hour='*', minute='*/1'], next run at: 2020-09-13 13:55:00 UTC)" executed successfully
+2020-09-13 13:54:00,128 :: INFO :: scheduler_add_job :: 323 :: Schedule Settings: 2;*/2 * * * *
+2020-09-13 13:54:00,129 :: INFO :: scheduler_add_job :: 331 :: Relay Id: 2
+2020-09-13 13:54:00,129 :: INFO :: scheduler_add_job :: 332 :: Cron Expression: */2 * * * * for Relay Id: 2
+2020-09-13 13:54:00,130 :: INFO :: _real_add_job :: 881 :: Added job "job_relay_2" to job store "default"
+2020-09-13 13:54:12,122 :: INFO :: scheduler_add_job :: 323 :: Schedule Settings: 3;*/1 * * * *
+2020-09-13 13:54:12,122 :: INFO :: scheduler_add_job :: 331 :: Relay Id: 3
+2020-09-13 13:54:12,123 :: INFO :: scheduler_add_job :: 332 :: Cron Expression: */1 * * * * for Relay Id: 3
+2020-09-13 13:54:12,125 :: INFO :: _real_add_job :: 881 :: Added job "job_relay_3" to job store "default"
+2020-09-13 13:55:00,003 :: INFO :: run_job :: 123 :: Running job "job_relay_1 (trigger: cron[month='*', day='*', day_of_week='*', hour='*', minute='*/1'], next run at: 2020-09-13 13:56:00 UTC)" (scheduled at 2020-09-13 13:55:00+00:00)
+```

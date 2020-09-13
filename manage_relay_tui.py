@@ -72,9 +72,10 @@ dict_relay_bcm = {
     4: 16
 }
 
-# Scheduler Object
+# Initialize the Scheduler Object
 scheduler = BackgroundScheduler()
 
+# Settings for logging
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d \
 :: %(message)s', level=logging.DEBUG, filename='manage_relay_tui.log')
 
@@ -82,6 +83,10 @@ logging.getLogger('apscheduler').setLevel(logging.INFO)
 
 
 class MessageDialog:
+    """
+    Management for the Message Dialog Box
+    """
+
     def __init__(self, title, text):
         self.future = Future()
 
@@ -103,6 +108,10 @@ class MessageDialog:
 
 
 class TextInputDialog:
+    """
+    Management for the TexInput Dialog Box
+    """
+
     def __init__(self, title="", label_text="", completer=None):
         self.future = Future()
 
@@ -143,6 +152,7 @@ class TextInputDialog:
 
 async def show_dialog_as_float(dialog):
     """ Coroutine. """
+
     float_ = Float(content=dialog)
     root_container.floats.insert(0, float_)
 
@@ -159,16 +169,28 @@ async def show_dialog_as_float(dialog):
     return result
 
 
-# Event handlers for all the buttons.
 def action_relay(relay_id, show_notification=True, append=False):
+    """
+    Event handlers for the buttons of the UI that manage the actions on the relays
+
+    :param relay_id: The Relay Id (admitted value: [1-4])
+    :param show_notification: Enable or disable notification of the action that will be display on the Text Area Widget
+    :param append: Enable or disable notification append on the Text Area Widget
+    :return: None
+    """
+
     if GPIO.input(dict_relay_bcm[relay_id]):
         activate_relay(relay_id, show_notification, append)
     else:
         de_activate_relay(relay_id, show_notification, append)
 
 
-# Get relay status
 def action_relay_status():
+    """
+    Get the status of the all relay
+    :return: None
+    """
+
     relay_status_string = []
 
     for relay_id, bcm_value in dict_relay_bcm.items():
@@ -180,8 +202,16 @@ def action_relay_status():
     text_area.text = "".join(relay_status_string)
 
 
-# Activate the relay
 def activate_relay(relay_id, show_notification=True, append=False):
+    """
+    Activate the specified relay
+
+    :param relay_id: The Relay Id (admitted value: [1-4])
+    :param show_notification: Enable or disable notification of the action that will be display on the Text Area Widget
+    :param append: Enable or disable notification append on the Text Area Widget
+    :return: None
+    """
+
     if 1 <= relay_id <= 4:
         GPIO.output(dict_relay_bcm[relay_id], GPIO.LOW)
 
@@ -189,13 +219,26 @@ def activate_relay(relay_id, show_notification=True, append=False):
             show_notification_activity_relays(f"Activate Relay with id {str(relay_id)}  {em_status_changed}\n", append)
 
 
-# CleanUp the resources
 def cleanup():
+    """
+    CleanUp the GPIO resources
+
+    :return: None
+    """
+
     GPIO.cleanup()
 
 
-# De-Activate the relay
 def de_activate_relay(relay_id, show_notification=True, append=False):
+    """
+    De-Activate the specified relay
+
+    :param relay_id: The Relay Id (admitted value: [1-4])
+    :param show_notification: Enable or disable notification of the action that will be display on the Text Area Widget
+    :param append: Enable or disable notification append on the Text Area Widget
+    :return:
+    """
+
     if 1 <= relay_id <= 4:
         GPIO.output(dict_relay_bcm[relay_id], GPIO.HIGH)
 
@@ -205,6 +248,12 @@ def de_activate_relay(relay_id, show_notification=True, append=False):
 
 
 def cron_expression_history():
+    """
+    Adds the default entries for History
+
+    :return: The InMemoryHistory
+    """
+
     history = InMemoryHistory()
     history.append_string("1;*/1 * * * *")
     history.append_string("2;*/1 * * * *")
@@ -214,15 +263,26 @@ def cron_expression_history():
     return history
 
 
-# Exit from Application
 def exit_app(event):
+    """
+    Exit from Application
+
+    :param event:
+    :return: None
+    """
+
     scheduler_shutdown()
     cleanup()
     get_app().exit()
 
 
-# Info box
 def info_box():
+    """
+    Adds the info text for the Text Area Widget
+
+    :return: None
+    """
+
     text_area.text = "This simple program is useful for activating or deactivating the relays of\n" \
                      "the board composed of four relays and connected to the Raspberry Pi. " \
                      "\n\n" \
@@ -236,14 +296,27 @@ def info_box():
                      "on GitHub https://github.com/amusarra/raspberry-pi-access-via-ts-cns"
 
 
-# Initialize the GPIO for the relay module
 def initialize_relay():
+    """
+    Initialize the GPIO for the relay module
+
+    :return: None
+    """
+
     GPIO.setmode(GPIO.BCM)
     for relay_id, bcm_value in dict_relay_bcm.items():
         GPIO.setup(bcm_value, GPIO.OUT, initial=GPIO.HIGH)
 
 
 def scheduler_add_job(schedule_settings):
+    """
+    Adds the job to the Scheduler System
+
+    :param schedule_settings: Are the schedule settings to create the job (example: 1;*/5 * * * *). The first value is
+    the relay id ([1-4]), the second value is the crontab (unix) expression.
+    :return: None
+    """
+
     if schedule_settings is not None:
         schedule_settings_detail = schedule_settings.split(";")
 
@@ -280,8 +353,14 @@ def scheduler_add_job(schedule_settings):
             raise ValueError('The value of Relay Id must be between 1 and 4')
 
 
-# Scheduler Shutdown
 def scheduler_shutdown(show_notification=False):
+    """
+    Execute the Scheduler Shutdown
+
+    :param show_notification: Enable or disable notification via dialog box
+    :return: None
+    """
+
     if scheduler.running:
         scheduler.shutdown(wait=False)
 
@@ -292,6 +371,14 @@ def scheduler_shutdown(show_notification=False):
 
 
 def show_message(title, text):
+    """
+    Show the message dialog box
+
+    :param title: The title of the dialog box
+    :param text:  Body of the dialog box
+    :return: None
+    """
+
     async def coroutine():
         dialog = MessageDialog(title, text)
         await show_dialog_as_float(dialog)
@@ -300,6 +387,14 @@ def show_message(title, text):
 
 
 def show_notification_activity_relays(message, append=False):
+    """
+    Show the notification on the Text Box Widget for the action on the relays
+
+    :param message: The message to display
+    :param append: Enable or disable notification append on the Text Area Widget
+    :return: None
+    """
+
     if append:
         old_message_notification = text_area.text
         current_message = f'{datetime.datetime.utcnow().isoformat()} - {message}'
@@ -311,6 +406,12 @@ def show_notification_activity_relays(message, append=False):
 
 
 def open_dialog_schedule_relay():
+    """
+    Open the dialog box for setting job for each relay
+
+    :return: None
+    """
+
     async def coroutine():
         open_dialog = TextInputDialog(
             title="Set the schedule for the relay",
@@ -329,6 +430,12 @@ def open_dialog_schedule_relay():
 
 
 def view_scheduled_jobs():
+    """
+    View the status of the scheduled jobs
+
+    :return: None
+    """
+
     jobs = StringIO()
 
     scheduler.print_jobs(out=jobs)

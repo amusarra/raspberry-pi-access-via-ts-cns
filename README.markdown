@@ -325,3 +325,86 @@ seguire.
 Sul mio canale YouTube ho pubblicato il video tutorial [Gestire un modulo relè collegato al Raspberry Pi con Python tramite una Text-based User Interface](https://youtu.be/GQvPyOEMy9c)
 che descrive nel dettaglio le funzionalità implementate dallo script Python. 
 [![Gestire un modulo relè collegato al Raspberry Pi con Python tramite una Text-based User Interface](https://img.youtube.com/vi/GQvPyOEMy9c/0.jpg)](https://www.youtube.com/watch?v=GQvPyOEMy9c)
+
+## 6. Script per la lettura dei dati personali dalla TS-CNS
+
+All'interno del progetto è disponibile lo script Python `read-ts-cns-data.py` che consente di leggere i dati personali contenuti nella Tessera Sanitaria - Carta Nazionale dei Servizi (TS-CNS).
+
+Lo script invia comandi APDU specifici alla Smart Card per recuperare informazioni come nome, cognome, codice fiscale, data di nascita e altri dati personali memorizzati nella tessera.
+
+Per approfondimenti sull TS-CNS e sulla sua architettura, è possibile consultare la [documentazione ufficiale](https://www.agid.gov.it/it/piattaforme/carta-nazionale-servizi).
+
+### Prerequisiti di sistema:
+- Raspberry Pi: vedere la sezione [2. Requisiti](#2-requisiti)
+- macOS: librerie di sviluppo PCSC
+- Linux: pacchetto pcscd e librerie di sviluppo
+- Windows: driver per il lettore di Smart Card
+
+### Requisiti e installazione
+
+Per eseguire lo script sono necessari i seguenti prerequisiti:
+
+- pyscard: libreria per la comunicazione con Smart Card
+- colorama: per la colorazione del testo nel terminale
+
+È possibile installare le dipendenze Python con il comando:
+
+```bash
+pip install pyscard colorama
+```
+
+### Utilizzo
+
+Per utilizzare lo script è sufficiente eseguirlo con Python:
+
+```bash
+python read-ts-cns-data.py         # Esecuzione normale
+python read-ts-cns-data.py --debug # Modalità debug con informazioni dettagliate
+```
+
+In modalità normale, lo script mostrerà i dati personali estratti dalla carta. Con l'opzione `--debug` verranno visualizzate informazioni aggiuntive come i dettagli sulla connessione, l'ATR (Answer To Reset) della smart card e una rappresentazione esadecimale dei dati grezzi.
+
+Lo script è in grado di leggere informazioni come:
+- Nome e cognome
+- Codice fiscale
+- Data di nascita
+- Comune di nascita
+- Sesso
+- Altri dati disponibili sulla carta
+
+A seguire un esempio di output dello script:
+
+```bash
+🔍 Lettori disponibili: ['BIT4ID miniLector EVO']
+🔍 Usando il lettore: BIT4ID miniLector EVO
+✅ Connessione alla smart card stabilita
+🔍 ATR: 3B FF 18 00 00 81 31 FE 45 00 6B 05 05 20 00 01 21 01 43 4E 53 10 31 80 79
+🔍 Inviando APDU: [0, 164, 0, 0, 2, 63, 0]
+🔍 Risposta:  SW1=90, SW2=00
+✅ MF selezionato con successo
+🔍 Inviando APDU: [0, 164, 0, 0, 2, 17, 0]
+🔍 Risposta:  SW1=90, SW2=00
+✅ DF selezionato con successo
+🔍 Inviando APDU: [0, 164, 0, 0, 2, 17, 2]
+🔍 Risposta:  SW1=90, SW2=00
+✅ EF selezionato con successo
+🔍 Inviando APDU: [0, 176, 0, 0, 0]
+🔍 Risposta: <HEX-DATA> SW1=90, SW2=00
+✅ Dati letti con successo
+✅ Dati letti dalla Smart Card:
+Esadecimale:
+<HEX-DATA>
+Dati decodificati:
+  Emettitore: 6120
+  Data emissione: 28/03/2023
+  Data scadenza: 27/03/2029
+  Cognome: MUSARRA
+  Nome: ANTONIO
+  Data nascita: 15/07/1980
+  Sesso: M
+  Codice fiscale: MSRNTN80I15B202X
+  Comune nascita: B202
+✅ Disconnessione dalla smart card completata
+```
+
+Se non viene rilevato un lettore di smart card o se non è presente una TS-CNS nel lettore, lo script mostrerà un messaggio di errore appropriato.

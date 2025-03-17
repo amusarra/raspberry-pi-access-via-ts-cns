@@ -1,5 +1,10 @@
 # Raspberry Pi - Un esempio di applicazione della TS-CNS
 
+[![Keep a Changelog v1.1.0 badge](https://img.shields.io/badge/changelog-Keep%20a%20Changelog%20v1.1.0-%23E05735)](CHANGELOG.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![code of conduct](https://img.shields.io/badge/Conduct-Contributor%20Covenant%202.1-purple.svg)](CODE_OF_CONDUCT.md)
+
+
 Questo progetto nasce dalla composizione dei seguenti "pezzi di ferro".
 
 1. Raspberry Pi 3 Model B+
@@ -102,10 +107,10 @@ alla console del Raspberry Pi ed eseguendo i comandi a seguire.
 
 ```bash
 # Verifica della Release del Sistema Operativo 
-$ cat /etc/os-release
+cat /etc/os-release
  
 # Verifica della Release del Kernel
-$ uname -a
+uname -a
 ```
 
 A seguire è mostrato l’output dei comandi precedenti eseguiti sul mio Raspberry Pi.
@@ -149,10 +154,10 @@ Una volta concluse le verifiche che riguardano Python, possiamo passare all'inst
 del resto dei componenti software.
 
 ```bash
-$ sudo pip install pad4pi
-$ sudo apt-get install pcscd
-$ sudo apt-get install libccid
-$ sudo apt-get install opensc
+sudo pip install pad4pi
+sudo apt-get install pcscd
+sudo apt-get install libccid
+sudo apt-get install opensc
 ```
 
 A questo punto, che i requisiti hardware e software di base sono soddisfatti, vediamo
@@ -193,11 +198,11 @@ diversa da root
 
 
 ```bash
-$ cd --
-$ git clone https://github.com/amusarra/raspberry-pi-access-via-ts-cns.git
-$ cd  raspberry-pi-access-via-ts-cns
-$ cd scripts
-$ sudo ./auto-update-gov-certificate.sh
+cd --
+git clone https://github.com/amusarra/raspberry-pi-access-via-ts-cns.git
+cd  raspberry-pi-access-via-ts-cns
+cd scripts
+sudo ./auto-update-gov-certificate.sh
 ```
 
 La figura a seguire mostra l'output che dovreste ottenere eseguendo lo script che aggiunge i
@@ -249,10 +254,10 @@ pacchetti richiesti dallo script.
 
 
 ```bash
-$ sudo pip install prompt_toolkit
-$ sudo pip install apscheduler
-$ sudo pip install pid
-$ sudo pip install emoji --upgrade
+sudo pip install prompt_toolkit
+sudo pip install apscheduler
+sudo pip install pid
+sudo pip install emoji --upgrade
 ```
 
 Una volta installate tutte le dipendenze, è possibile eseguire lo script, utilizzando il comando
